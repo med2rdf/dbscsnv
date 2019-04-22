@@ -203,6 +203,12 @@ RDF::Turtle::Writer.open(filename + ".ttl", stream: true, base_uri:  baseurl, pr
 			statement = [buri, RDF::URI.new(m2r + "alternative_allele"), RDF::Literal.new(row["alt"])]
 			writer << statement
 
+			statement = [buri, RDF::URI.new(baseurl + "region"), RDF::Literal.new(row["Ensembl_region"])]
+			writer << statement
+
+			statement = [buri, RDF::URI.new(baseurl + "function"), RDF::Literal.new(row["Ensembl_functional_consequence"])]
+			writer << statement
+
 			value = row["RefSeq_gene"].split(/[;\:\(]/)[0]
 			if value.length >= 2
 				guri = RDF::URI.new(baseurl + "gene/" + value)
