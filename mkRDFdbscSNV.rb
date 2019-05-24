@@ -270,21 +270,23 @@ RDF::Turtle::Writer.open(filename + ".ttl", stream: true, base_uri:  baseurl, pr
 			for refseq_aa in row["RefSeq_id_c.change_p.change"].split(/;/) do
 				if refseq_aa and refseq_aa != "."
 					values = refseq_aa.split(/:/)
-					eurl = "hgnc_exon/" + values[1] + "_" + values[2]
-					euri = RDF::URI.new(baseurl+eurl)
-					statement = [buri, RDF::URI.new(baseurl + "hgnc_exon"), euri]
-					writer << statement
-					
-					nurl = "nuccore/" + values[1]
-					nuri = RDF::URI.new(baseurl+nurl)
-					statement = [euri, RDF::URI.new(baseurl + "nuccore"), nuri]
-					writer << statement
-					
-					statement = [nuri, seeAlso, RDF::URI.new(hgvsNuccore + values[1])]
-					writer << statement
-					
-					statement = [nuri, RDF::URI.new(baseurl + "exon_number"), RDF::Literal.new(values[2].slice(5..-1).to_i)]
-					writer << statement
+					if values.length >= 3
+						eurl = "hgnc_exon/" + values[1] + "_" + values[2]
+						euri = RDF::URI.new(baseurl+eurl)
+						statement = [buri, RDF::URI.new(baseurl + "hgnc_exon"), euri]
+						writer << statement
+						
+						nurl = "nuccore/" + values[1]
+						nuri = RDF::URI.new(baseurl+nurl)
+						statement = [euri, RDF::URI.new(baseurl + "nuccore"), nuri]
+						writer << statement
+						
+						statement = [nuri, seeAlso, RDF::URI.new(hgvsNuccore + values[1])]
+						writer << statement
+						
+						statement = [nuri, RDF::URI.new(baseurl + "exon_number"), RDF::Literal.new(values[2].slice(5..-1).to_i)]
+						writer << statement
+					end
 				end
 			end
 			
