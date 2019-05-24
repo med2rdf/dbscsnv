@@ -280,7 +280,7 @@ RDF::Turtle::Writer.open(filename + ".ttl", stream: true, base_uri:  baseurl, pr
 					statement = [euri, RDF::URI.new(baseurl + "nuccore"), nuri]
 					writer << statement
 					
-					statement = [nuri, seeAlso, RDF::URI.new(hgncNuccore + values[1])]
+					statement = [nuri, seeAlso, RDF::URI.new(hgvsNuccore + values[1])]
 					writer << statement
 					
 					statement = [nuri, RDF::URI.new(baseurl + "exon_number"), RDF::Literal.new(values[2].slice(5..-1).to_i)]
@@ -291,33 +291,35 @@ RDF::Turtle::Writer.open(filename + ".ttl", stream: true, base_uri:  baseurl, pr
 			for ensembl_aa in row["Ensembl_id_c.change_p.change"].split(/;/) do
 				if ensembl_aa and ensembl_aa != "."
 					values = ensembl_aa.split(/:/)
-					eurl = "ensembl_exon/" + values[1] + "_" + values[2]
-					euri = RDF::URI.new(baseurl+eurl)
-					statement = [buri, RDF::URI.new(baseurl + "emsenbl_exon"), euri]
-					writer << statement
-					
-					turl = "transcript/" + values[1]
-					turi = RDF::URI.new(baseurl+turl)
-					statement = [euri, RDF::URI.new(baseurl + "transcript"), turi]
-					writer << statement
-					
-					statement = [turi, seeAlso, RDF::URI.new(ensemblTranscript + values[1])]
-					writer << statement
+					if values.length >= 3
+						eurl = "ensembl_exon/" + values[1] + "_" + values[2]
+						euri = RDF::URI.new(baseurl+eurl)
+						statement = [buri, RDF::URI.new(baseurl + "emsenbl_exon"), euri]
+						writer << statement
+						
+						turl = "transcript/" + values[1]
+						turi = RDF::URI.new(baseurl+turl)
+						statement = [euri, RDF::URI.new(baseurl + "transcript"), turi]
+						writer << statement
+						
+						statement = [turi, seeAlso, RDF::URI.new(ensemblTranscript + values[1])]
+						writer << statement
 
-					statement = [turi, RDF::URI.new(baseurl + "exon_number"), RDF::Literal.new(values[2].slice(5..-1).to_i)]
-					writer << statement
+						statement = [turi, RDF::URI.new(baseurl + "exon_number"), RDF::Literal.new(values[2].slice(5..-1).to_i)]
+						writer << statement
 
-					statement = [buri, RDF::URI.new(baseurl + "gene_position_base"), RDF::Literal.new(values[3].slice(4..-2).to_i)]
-					writer << statement
+						statement = [buri, RDF::URI.new(baseurl + "gene_position_base"), RDF::Literal.new(values[3].slice(4..-2).to_i)]
+						writer << statement
 
-					statement = [buri, RDF::URI.new(baseurl + "position_amino_acid"), RDF::Literal.new(values[4].slice(4..-2).to_i)]
-					writer << statement
+						statement = [buri, RDF::URI.new(baseurl + "position_amino_acid"), RDF::Literal.new(values[4].slice(4..-2).to_i)]
+						writer << statement
 
-					statement = [buri, RDF::URI.new(baseurl + "reference_amino_acid"), RDF::Literal.new(values[4].slice(2))]
-					writer << statement
+						statement = [buri, RDF::URI.new(baseurl + "reference_amino_acid"), RDF::Literal.new(values[4].slice(2))]
+						writer << statement
 
-					statement = [buri, RDF::URI.new(baseurl + "alternative_amino_acid"), RDF::Literal.new(values[4].slice(-1))]
-					writer << statement
+						statement = [buri, RDF::URI.new(baseurl + "alternative_amino_acid"), RDF::Literal.new(values[4].slice(-1))]
+						writer << statement
+					end
 				end
 			end
 			

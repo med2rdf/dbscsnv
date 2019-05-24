@@ -11,7 +11,7 @@
 `# cd data`
 
 Download data from 
-https://sites.google.com/site/jpopgen/dbscSNV
+https://sites.google.com/site/jpopgen/dbNSFP
 
 Get the source code of this tool from github.
 
